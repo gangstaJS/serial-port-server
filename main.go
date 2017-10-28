@@ -3,15 +3,23 @@ package main
 import (
 	"log"
 	"net/http"
+	"flag"
+	"fmt"
 )
 
-var addr = "localhost:4567"
-
 func main() {
+
+	port := flag.String("port", "/dev/ttys006", "serial port ( example /dev/ttys006, etc)")
+	addr := flag.String("addr", "localhost:4567", "web socket host and port ( example localhost:4567)")
+
+	flag.Parse()
+
+	fmt.Println("Websocket starting on: ", *addr)
+
 	initDb()
 	hub := newHub()
 	go hub.run()
-	go readSerial(hub)
+	go readSerial(hub, port)
 
 	http.HandleFunc("/", serveHome)
 
@@ -19,7 +27,7 @@ func main() {
 		serveWs(hub, w, r)
 	})
 
-	err := http.ListenAndServe(addr, nil)
+	err := http.ListenAndServe(*addr, nil)
 
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)

@@ -8,9 +8,9 @@ import (
 	"encoding/json"
 )
 
-func readSerial(h *Hub) {
+func readSerial(h *Hub, p *string) {
 	options := serial.OpenOptions{
-		PortName: "/dev/ttys006",
+		PortName: *p,
 		BaudRate: 115200,
 		DataBits: 8,
 		StopBits: 2,
@@ -26,7 +26,7 @@ func readSerial(h *Hub) {
 		log.Fatalf("serial.Open: %v", err)
 	}
 
-	fmt.Println("Started...")
+	fmt.Println("Started read from: ", *p)
 
 	for {
 		buf := make([]byte, 128)
