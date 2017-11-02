@@ -19,7 +19,7 @@ func main() {
 	initDb()
 	hub := newHub()
 	go hub.run()
-	go readSerial(hub, port)
+	go r(hub, port)
 
 	http.HandleFunc("/", serveHome)
 
